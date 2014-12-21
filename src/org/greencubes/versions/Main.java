@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.URI;
 
 import org.greencubes.util.Util;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Main {
 
@@ -23,24 +25,36 @@ public class Main {
 			directoryUrl = dir.toURI();
 			versionFile.createNewFile();
 			FileWriter fw = new FileWriter(versionFile);
-			make(dir, fw);
+			JSONObject json = new JSONObject();
+			JSONArray jsonList = new JSONArray();
+			make(dir, fw, jsonList);
 			fw.close();
-		} catch(IOException e) {
+			json.put("files", jsonList);
+			fw = new FileWriter(new File("version.js"));
+			json.writeWithIdent(fw);
+			fw.close();
+			System.out.println("Done.");
+		} catch(Exception e) {
 			e.printStackTrace();
-		}		
+			System.exit(1);
+		}	
 	}
 	
-	private static void make(File dir, FileWriter fw) throws IOException {
-		for(File f : dir.listFiles()) {
+	private static void make(File file, FileWriter fw, JSONArray jsonList) throws IOException {
+		for(File f : file.listFiles()) {
 			if(f.isDirectory()) {
-				make(f, fw);
+				make(f, fw, jsonList);
 				continue;
 			}
 			String filename = Util.getRelativeName(f, directoryUrl);
 			try {
 				String hash = Util.getMD5Checksum(f);
 				fw.append(filename).append(';').append(hash).append('\n');
-				//System.out.println(filename + ";" + hash);
+				JSONObject joFileInfo = new JSONObject();
+				joFileInfo.put("length", file.length());
+				joFileInfo.put("name", filename);
+				joFileInfo.put("hash", hash);
+				jsonList.put(joFileInfo);
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
