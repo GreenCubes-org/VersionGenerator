@@ -21,7 +21,7 @@ public class Main {
 		}
 		File versionFile = new File("version.md5");
 		try {
-			dir = new File(Util.join(args, " "));
+			dir = new File(args[0]);
 			directoryUrl = dir.toURI();
 			versionFile.createNewFile();
 			FileWriter fw = new FileWriter(versionFile);
@@ -30,6 +30,9 @@ public class Main {
 			make(dir, fw, jsonList);
 			fw.close();
 			json.put("files", jsonList);
+			for(int arg = 1; arg < args.length - 1; arg += 2) { // Put parameters to resulting json
+				json.put(args[arg], args[arg + 1]);
+			}
 			fw = new FileWriter(new File("version.js"));
 			json.writeWithIdent(fw);
 			fw.close();
