@@ -54,7 +54,7 @@ public class Main {
 				String hash = Util.getMD5Checksum(f);
 				fw.append(filename).append(';').append(hash).append('\n');
 				JSONObject joFileInfo = new JSONObject();
-				joFileInfo.put("length", file.length());
+				joFileInfo.put("length", f.length());
 				joFileInfo.put("name", filename);
 				joFileInfo.put("hash", hash);
 				jsonList.put(joFileInfo);
