@@ -33,14 +33,14 @@ public class Main {
 			for(int arg = 1; arg < args.length - 1; arg += 2) { // Put parameters to resulting json
 				json.put(args[arg], args[arg + 1]);
 			}
-			fw = new FileWriter(new File("version.js"));
-			json.writeWithIdent(fw);
+			fw = new FileWriter(new File("version.json"));
+			json.write(fw);
 			fw.close();
 			System.out.println("Done.");
 		} catch(Exception e) {
 			e.printStackTrace();
 			System.exit(1);
-		}	
+		}
 	}
 	
 	private static void make(File file, FileWriter fw, JSONArray jsonList) throws IOException {
